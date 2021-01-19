@@ -2,12 +2,15 @@ const User = require("./User")
 exports.users = async () => {
     return User.find();
 };
-exports.users = async id => {
-    return User.find();
+
+exports.userById = async id => {
+    return User.findById(id);
 };
-exports.users = async () => {
-    return User.find();
+
+exports.createUser = async data => {
+    return User.create(data);
 };
-exports.users = async () => {
-    return User.find();
+
+exports.removeUser = async id => {
+    return User.findByIdAndRemove(id);
 };

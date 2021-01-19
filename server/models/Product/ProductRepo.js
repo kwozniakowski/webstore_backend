@@ -2,10 +2,10 @@ const Product = require("./Product");
 exports.products = async () => {
     return Product.find();
 };
-exports.userById = async id => {
+exports.productById = async id => {
     return Product.findById(id);
 }
-exports.createUser = async payload => {
+exports.createProduct = async payload => {
     return Product.create(payload);
 }
 exports.removeProduct = async id => {

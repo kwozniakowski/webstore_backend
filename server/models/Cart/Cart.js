@@ -22,7 +22,12 @@ let ItemSchema = new Schema({
 }, {
     timestamps: true
 })
+
 const CartSchema = new Schema({
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+    },
     items: [ItemSchema],
     subTotal: {
         default: 0,

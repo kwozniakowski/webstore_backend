@@ -2,28 +2,26 @@ const cartRepository = require('./CartRepo')
 const productRepository = require('../Product/ProductRepo');
 
 exports.addItemToCart = async (req, res) => {
-    const {
-        productId
-    } = req.body;
-    const quantity = Number.parseInt(req.body.quantity);
     try {
-        let cart = await cartRepository.cart();
-        console.log(cart)
-        let productDetails = await productRepository.productById(productId);
+        let itemData = {
+            itemId: req.body.itemId,
+            quantity: req.body.quantity
+        }
+
+        let productDetails = await productRepository.productById(itemData.itemId);
         if (!productDetails) {
             return res.status(500).json({
                 type: "Not Found",
                 msg: "Invalid request"
             })
         }
-        //--If Cart Exists ----
-        if (cart) {
-            //---- check if index exists ----
-            const indexFound = cart.items.findIndex(item => item.productId.id == productId);
+        let cart = await cartRepository.cartByUserId(req.body.userId)
+        /*if(cart){
+            const indexFound = cart.items.findIndex(item => item.productId.id === productId);
             //------this removes an item from the the cart if the quantity is set to zero,We can use this method to remove an item from the list  -------
             if (indexFound !== -1 && quantity <= 0) {
                 cart.items.splice(indexFound, 1);
-                if (cart.items.length == 0) {
+                if (cart.items.length === 0) {
                     cart.subTotal = 0;
                 } else {
                     cart.subTotal = cart.items.map(item => item.total).reduce((acc, next) => acc + next);
@@ -46,47 +44,27 @@ exports.addItemToCart = async (req, res) => {
                 })
                 cart.subTotal = cart.items.map(item => item.total).reduce((acc, next) => acc + next);
             }
-            //----if quantity of price is 0 throw the error -------
-            else {
-                return res.status(400).json({
-                    type: "Invalid",
-                    msg: "Invalid request"
-                })
-            }
-            let data = await cart.save();
-            res.status(200).json({
-                type: "success",
-                mgs: "Process Successful",
-                data: data
-            })
-        }
-        //------------ if there is no user with a cart...it creates a new cart and then adds the item to the cart that has been created------------
-        else {
-            const cartData = {
-                items: [{
-                    productId: productId,
-                    quantity: quantity,
-                    total: parseInt(productDetails.price * quantity),
-                    price: productDetails.price
-                }],
-                subTotal: parseInt(productDetails.price * quantity)
-            }
-            cart = await cartRepository.addItem(cartData)
-            // let data = await cart.save();
-            res.json(cart);
-        }
-    } catch (err) {
-        console.log(err)
+        }*/
+        let data = await cart.save();
+        res.status(200).json({
+            type: "success",
+            mgs: "Process Successful",
+            data: data
+        })
+    }
+    catch (e) {
+        console.log(e)
         res.status(400).json({
             type: "Invalid",
             msg: "Something Went Wrong",
-            err: err
+            err: e
         })
     }
 }
+
 exports.getCart = async (req, res) => {
     try {
-        let cart = await cartRepository.cart()
+        let cart = await cartRepository.cartById()
         if (!cart) {
             return res.status(400).json({
                 type: "Invalid",
@@ -103,6 +81,28 @@ exports.getCart = async (req, res) => {
             type: "Invalid",
             msg: "Something Went Wrong",
             err: err
+        })
+    }
+}
+
+exports.createCart = async (req, res) => {
+    try {
+        let data = {
+            userId: req.body.userId,
+            items: []
+        }
+        let product = await cartRepository.createCart({
+            ...data
+        });
+        res.status(200).json({
+            status: true,
+            data: product,
+        })
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({
+            error: err,
+            status: false,
         })
     }
 }

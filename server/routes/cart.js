@@ -5,6 +5,7 @@ const mongoose = require('mongoose')
 
 router.post("/", cartController.addItemToCart);
 router.get("/", cartController.getCart);
+router.post("/create", cartController.createCart)
 router.delete("/empty-cart", cartController.emptyCart);
 
 module.exports = router;

@@ -11,6 +11,10 @@ exports.createUser = async data => {
     return User.create(data);
 };
 
+exports.loginUser = async data => {
+    return User.find({"username": data.username, "password": data.password});
+}
+
 exports.removeUser = async id => {
     return User.findByIdAndRemove(id);
 };

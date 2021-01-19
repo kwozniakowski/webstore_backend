@@ -6,6 +6,8 @@ exports.createProduct = async (req, res) => {
             price: req.body.price,
             quantity: req.body.quantity,
             description: req.body.description,
+            weight: req.body.weight,
+            category: req.body.category
         }
         let product = await productRepository.createProduct({
             ...payload

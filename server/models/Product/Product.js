@@ -18,6 +18,15 @@ const ProductSchema = mongoose.Schema({
         type: String,
         required: [true, "Please include the description"],
     },
+    weight: {
+        type: Number,
+        required: [true, "Please include the weight"]
+    },
+    category: {
+        type: String,
+        required: [true, "Please include the category"]
+    },
+
     versionKey: false
 })
 

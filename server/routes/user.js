@@ -5,5 +5,6 @@ const mongoose = require('mongoose')
 
 router.get("/", userController.getUsers);
 router.post("/create", userController.createUser)
+router.post("/login", userController.login)
 
 module.exports = router;

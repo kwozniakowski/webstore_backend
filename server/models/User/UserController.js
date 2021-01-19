@@ -10,13 +10,13 @@ exports.login = async (req,res) => {
         let user = await userRepository.loginUser({
             ...data
         });
-        res.status(200).json({
+        res.status(204).json({
             status: true,
             data: user,
         })
     } catch (err) {
         console.log(err)
-        res.status(500).json({
+        res.status(400).json({
             error: err,
             status: false,
         })

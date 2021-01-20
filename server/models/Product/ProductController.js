@@ -71,3 +71,28 @@ exports.removeProduct = async (req, res) => {
         })
     }
 }
+
+exports.updateProduct = async (req,res) => {
+    try {
+        let payload = {
+            id: req.body.id,
+            name: req.body.name,
+            price: req.body.price,
+            quantity: req.body.quantity,
+            description: req.body.description,
+            weight: req.body.weight,
+            category: req.body.category
+        }
+        let product = await productRepository.editProduct(payload.id, payload);
+        res.status(200).json({
+            status: true,
+            data: product,
+        })
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({
+            error: err,
+            status: false,
+        })
+    }
+}

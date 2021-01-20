@@ -11,3 +11,6 @@ exports.createProduct = async payload => {
 exports.removeProduct = async id => {
     return Product.findByIdAndRemove(id);
 }
+exports.editProduct = async (filter,update) => {
+    return Product.findOneAndUpdate(filter,update);
+}

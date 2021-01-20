@@ -12,6 +12,7 @@ exports.createUser = async data => {
 };
 
 exports.loginUser = async data => {
+    console.log(data)
     return User.find({"username": data.username, "password": data.password});
 }
 

@@ -4,18 +4,26 @@ const cartRepository = require('../Cart/CartRepo')
 exports.login = async (req,res) => {
     try {
         let data = {
-            login: req.body.login,
+            username: req.body.login,
             password: req.body.password
         }
-        let user = await userRepository.loginUser({
+        let users = await userRepository.loginUser({
             ...data
         });
-        res.status(204).json({
-            status: true,
-            data: user,
-        })
+        if(users.length === 1){
+            res.status(200).json({
+                data: users[0],
+                status: true,
+            })
+        }
+        else{
+            res.status(403).json({
+                error: "Nieprawidłowy login lub hasło",
+                status: false,
+            })
+        }
+
     } catch (err) {
-        console.log(err)
         res.status(400).json({
             error: err,
             status: false,

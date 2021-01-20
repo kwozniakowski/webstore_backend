@@ -9,9 +9,7 @@ exports.createProduct = async (req, res) => {
             weight: req.body.weight,
             category: req.body.category
         }
-        let product = await productRepository.createProduct({
-            ...payload
-        });
+        let product = await productRepository.createProduct(payload);
         res.status(200).json({
             status: true,
             data: product,

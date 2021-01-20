@@ -88,16 +88,11 @@ exports.getCart = async (req, res) => {
 exports.createCart = async (req, res) => {
     try {
         let data = {
-            userId: req.body.userId,
             items: []
         }
-        let product = await cartRepository.createCart({
+        let cart = await cartRepository.createCart({
             ...data
         });
-        res.status(200).json({
-            status: true,
-            data: product,
-        })
     } catch (err) {
         console.log(err)
         res.status(500).json({

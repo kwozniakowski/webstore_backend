@@ -1,5 +1,5 @@
 const userRepository = require('./UserRepo')
-const cartRepository = require('../Cart/CartRepo')
+const cartController = require('../Cart/CartController')
 
 exports.login = async (req,res) => {
     try {
@@ -45,13 +45,10 @@ exports.createUser = async (req, res) => {
             ...data
         });
 
-        let userData = {
-            UserId: user._id
-        }
+        req.user = user
 
-        let cart = await cartRepository.createCart({...
-            userData
-        });
+        //let cart = await cartController.createCart(data);
+        //console.log(cart)
 
         res.status(200).json({
             status: true,

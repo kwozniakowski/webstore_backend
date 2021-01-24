@@ -12,7 +12,7 @@ exports.createCart = async data => {
     return Cart.create(data)
 }
 
-exports.addItem = async payload => {
-    return Cart.create(payload);
+exports.addItem = async (cart,payload) => {
+    return Cart.updateOne(cart,{ $push: { items: payload }} )
 }
 

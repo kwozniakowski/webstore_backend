@@ -26,7 +26,6 @@ let ItemSchema = new Schema({
 const CartSchema = new Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User"
     },
     items: [ItemSchema],
     subTotal: {
@@ -36,4 +35,4 @@ const CartSchema = new Schema({
 }, {
     timestamps: true
 })
-module.exports = mongoose.model('cart', CartSchema);
+module.exports = mongoose.model('Cart', CartSchema);

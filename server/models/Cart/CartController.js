@@ -9,13 +9,15 @@ exports.addItemToCart = async (req, res) => {
         }
 
         let productDetails = await productRepository.productById(itemData.itemId);
+        let cart;
         if (!productDetails) {
             return res.status(500).json({
                 type: "Not Found",
                 msg: "Invalid request"
             })
         }
-        let cart = await cartRepository.cartByUserId(req.body.userId)
+
+        cart = await cartRepository.cartByUserId(req.body.userId);
         /*if(cart){
             const indexFound = cart.items.findIndex(item => item.productId.id === productId);
             //------this removes an item from the the cart if the quantity is set to zero,We can use this method to remove an item from the list  -------
@@ -45,7 +47,7 @@ exports.addItemToCart = async (req, res) => {
                 cart.subTotal = cart.items.map(item => item.total).reduce((acc, next) => acc + next);
             }
         }*/
-        let data = await cart.save();
+        let data = await cartRepository.addItem(cart, {$push: {items: productDetails} });
         res.status(200).json({
             type: "success",
             mgs: "Process Successful",
@@ -56,7 +58,7 @@ exports.addItemToCart = async (req, res) => {
         console.log(e)
         res.status(400).json({
             type: "Invalid",
-            msg: "Something Went Wrong",
+            msg: "Something went wrong",
             err: e
         })
     }
@@ -88,11 +90,15 @@ exports.getCart = async (req, res) => {
 exports.createCart = async (req, res) => {
     try {
         let data = {
+            userId: req.body.userId,
             items: []
         }
-        let cart = await cartRepository.createCart({
-            ...data
-        });
+        let cart = await cartRepository.createCart(data);
+        res.status(200).json({
+            status: true,
+            data: cart,
+            type: "success"
+        })
     } catch (err) {
         console.log(err)
         res.status(500).json({

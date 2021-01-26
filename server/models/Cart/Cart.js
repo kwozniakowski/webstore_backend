@@ -49,5 +49,10 @@ const CartSchema = new Schema({
     timestamps: true
 })
 
-module.exports = mongoose.model('Cart', CartSchema);
-//module.exports = mongoose.model('Item', ItemSchema);
+const item = mongoose.model('Item', ItemSchema)
+const cart = mongoose.model('Cart', CartSchema)
+
+module.exports = {
+    "Item": item,
+    "Cart": cart
+}

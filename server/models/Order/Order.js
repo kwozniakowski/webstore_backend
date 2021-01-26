@@ -1,4 +1,3 @@
-import {Item} from "../Cart/Cart";
 
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;

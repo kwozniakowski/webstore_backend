@@ -56,7 +56,7 @@ exports.getProductById = async (req, res) => {
 }
 exports.removeProduct = async (req, res) => {
     try {
-        let id = req.data.id
+        let id = req.body.id
         console.log(req.data.data)
         console.log(req.body)
         console.log(req.params)

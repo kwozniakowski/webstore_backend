@@ -56,7 +56,10 @@ exports.getProductById = async (req, res) => {
 }
 exports.removeProduct = async (req, res) => {
     try {
-        let id = req.params.id
+        let id = req.data.id
+        console.log(req.data.data)
+        console.log(req.body)
+        console.log(req.params)
         let productDetails = await productRepository.removeProduct(id)
         res.status(200).json({
             status: true,

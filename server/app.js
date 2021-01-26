@@ -4,6 +4,7 @@ const connect = require('./config/mongooose')
 
 const app = express();
 const productsRoute = require('./routes/products');
+const categoryRoute = require('./routes/category')
 const cartRoute = require('./routes/cart');
 const userRoute = require('./routes/user');
 
@@ -18,6 +19,7 @@ app.use(express.json())
 app.use('/api/products', productsRoute);
 app.use('/api/cart', cartRoute);
 app.use('/api/user', userRoute);
+app.use('/api/category',categoryRoute)
 app.use(bodyParser.json());
 app.set('port', 3000)
 

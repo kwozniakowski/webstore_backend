@@ -1,11 +1,5 @@
 const mongoose = require('mongoose');
 
-const CategorySchema = mongoose.Schema({
-    category: {
-        type: String,
-        enum: ["Mięso", "Pieczywo", "Napoje"]
-    }
-})
 
 const ProductSchema = mongoose.Schema({
     name: {
@@ -30,7 +24,7 @@ const ProductSchema = mongoose.Schema({
         required: [true, "Please include the weight"]
     },
     category: {
-        type: CategorySchema,
+        type: String,
         required: [true, "Please include the category"]
     },
 

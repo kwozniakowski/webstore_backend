@@ -1,4 +1,4 @@
-import Item from "../Cart/Cart"
+import {Item} from "../Cart/Cart";
 
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
@@ -14,6 +14,7 @@ const PurchaserSchema = new Schema({
     },
     phoneNumber: {
         type: String,
+        length: 9,
         required: true
     }
 })
@@ -51,4 +52,5 @@ const OrderSchema = new Schema({
 }, {
     timestamps: true
 })
+
 module.exports = mongoose.model('Order', OrderSchema);

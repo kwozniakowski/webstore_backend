@@ -9,7 +9,6 @@ exports.addItemToCart = async (req, res) => {
         }
 
         let productDetails = await productRepository.productById(itemData.itemId);
-        let cart;
         if (!productDetails) {
             return res.status(500).json({
                 type: "Not Found",
@@ -17,9 +16,13 @@ exports.addItemToCart = async (req, res) => {
             })
         }
 
-        cart = await cartRepository.cartByUserId(req.body.userId);
-        /*if(cart){
-            const indexFound = cart.items.findIndex(item => item.productId.id === productId);
+        let cart
+        let carts = await cartRepository.cartByUserId(req.body.userId);
+        const productId = itemData.itemId;
+        const quantity = itemData.quantity;
+        if(carts.length && carts.length > 0){
+            cart = carts[0]
+            const indexFound = cart.items.findIndex(item => item.productId._id.toString() === productId.toString());
             //------this removes an item from the the cart if the quantity is set to zero,We can use this method to remove an item from the list  -------
             if (indexFound !== -1 && quantity <= 0) {
                 cart.items.splice(indexFound, 1);
@@ -39,21 +42,44 @@ exports.addItemToCart = async (req, res) => {
             //----Check if Quantity is Greater than 0 then add item to items Array ----
             else if (quantity > 0) {
                 cart.items.push({
+                    name: productDetails.name,
                     productId: productId,
                     quantity: quantity,
+                    weight: productDetails.weight,
                     price: productDetails.price,
-                    total: parseInt(productDetails.price * quantity)
+                    category: productDetails.category,
+                    total: productDetails.price * quantity
                 })
                 cart.subTotal = cart.items.map(item => item.total).reduce((acc, next) => acc + next);
             }
-        }*/
-        let data = await cartRepository.addItem(cart, {$push: {items: productDetails} });
+        }
+        else {
+            console.log("Tworzę koszyk")
+            let data = {"userId" : req.body.userId.toString()}
+            cart = await cartRepository.createCart(data)
+            if (quantity > 0) {
+                cart.items.push({
+                    name: productDetails.name,
+                    productId: productId,
+                    quantity: quantity,
+                    weight: productDetails.weight,
+                    price: productDetails.price,
+                    category: productDetails.category,
+                    total: productDetails.price * quantity
+                })
+                cart.subTotal = cart.items.map(item => item.total).reduce((acc, next) => acc + next);
+            }
+        }
+
+        await cart.save();
         res.status(200).json({
             type: "success",
             mgs: "Process Successful",
-            data: data
+            data: cart
         })
+
     }
+
     catch (e) {
         console.log(e)
         res.status(400).json({
@@ -62,13 +88,25 @@ exports.addItemToCart = async (req, res) => {
             err: e
         })
     }
+
 }
 
 exports.getCart = async (req, res) => {
     try {
-        let cart = await cartRepository.cartById()
+        console.log(req.body.userId)
+        let carts = await cartRepository.cartByUserId(req.body.userId)
+        let cart = carts[0]
         if (!cart) {
+            let data = {"userId": req.body.userId.toString()}
+            cart = cartRepository.createCart(data)
+            if(cart){
+                return res.status(200).json({
+                    status: true,
+                    data: cart
+                })
+            }
             return res.status(400).json({
+                status: false,
                 type: "Invalid",
                 msg: "Cart Not Found",
             })
@@ -110,7 +148,8 @@ exports.createCart = async (req, res) => {
 
 exports.emptyCart = async (req, res) => {
     try {
-        let cart = await cartRepository.cart();
+        let carts = await cartRepository.cart();
+        let cart = carts[0];
         cart.items = [];
         cart.subTotal = 0
         let data = await cart.save();

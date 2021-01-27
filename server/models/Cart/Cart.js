@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-let ItemSchema = new Schema({
+const ItemSchema = new Schema({
     name: {
         type: String,
         required: true
@@ -49,10 +49,4 @@ const CartSchema = new Schema({
     timestamps: true
 })
 
-const item = mongoose.model('Item', ItemSchema)
-const cart = mongoose.model('Cart', CartSchema)
-
-module.exports = {
-    "Item": item,
-    "Cart": cart
-}
+module.exports = mongoose.model('Cart', CartSchema);

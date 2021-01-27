@@ -1,4 +1,3 @@
-
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
@@ -25,7 +24,39 @@ const OrderStateSchema = new Schema({
         enum: ['NIEZATWIERDZONE', 'ZATWIERDZONE', 'ANULOWANE', 'ZREALIZOWANE']
     }
 })
-
+const ItemSchema = new Schema({
+    name: {
+        type: String,
+        required: true
+    },
+    productId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Product",
+    },
+    quantity: {
+        type: Number,
+        required: true,
+        min: [1, 'Quantity can not be less then 1.']
+    },
+    weight: {
+        type: Number,
+        required: true,
+    },
+    price: {
+        type: Number,
+        required: true
+    },
+    category: {
+        type: String,
+        required: true
+    },
+    total: {
+        type: Number,
+        required: true,
+    }
+}, {
+    timestamps: true
+})
 const OrderSchema = new Schema({
     acceptDate: {
         type: Date,
@@ -44,7 +75,7 @@ const OrderSchema = new Schema({
         required: true
     },
     items: {
-        type: [Item],
+        type: [ItemSchema],
         required: true,
         default: []
     }

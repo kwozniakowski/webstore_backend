@@ -177,12 +177,10 @@ exports.removeFromCart = async (req, res) => {
 
     let carts = await cartRepository.cartByUserId(req.body.userId);
     const productId = itemData.itemId;
-    const quantity = itemData.quantity;
-    let cart;
-    if (carts.length && carts.length > 0) {
-        cart = carts[0]
-        const indexFound = cart.items.findIndex(item => item.productId._id.toString() === productId.toString());
-        //------this removes an item from the the cart if the quantity is set to zero,We can use this method to remove an item from the list  -------
+    let cart = carts[0];
+    console.log(cart.items)
+    const indexFound = cart.items.findIndex(item => item.productId._id.toString() === productId.toString());
+    console.log(indexFound)
         if (indexFound !== -1) {
             cart.items.splice(indexFound, 1);
             if (cart.items.length === 0) {
@@ -191,7 +189,6 @@ exports.removeFromCart = async (req, res) => {
                 cart.subTotal = cart.items.map(item => item.total).reduce((acc, next) => acc + next);
             }
         }
-    }
     await cart.save();
     res.status(200).json({
         type: "success",

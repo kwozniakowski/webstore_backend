@@ -70,9 +70,10 @@ exports.removeProduct = async (req, res) => {
 }
 
 exports.updateProduct = async (req,res) => {
+    console.log(req.body)
     try {
         let payload = {
-            id: req.body.id,
+            id: req.body.productId,
             name: req.body.name,
             price: req.body.price,
             quantity: req.body.quantity,
@@ -80,7 +81,11 @@ exports.updateProduct = async (req,res) => {
             weight: req.body.weight,
             category: req.body.category
         }
-        let product = await productRepository.editProduct(payload.id, payload);
+        console.log("id produktu: " + payload.id)
+        let products = await productRepository.productByProductId(payload.id);
+        let product = products[0]
+        product.quantity = parseFloat(product.quantity) - parseFloat(payload.quantity)
+        await product.save()
         res.status(200).json({
             status: true,
             data: product,

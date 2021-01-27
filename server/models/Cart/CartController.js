@@ -148,7 +148,7 @@ exports.createCart = async (req, res) => {
 
 exports.emptyCart = async (req, res) => {
     try {
-        let carts = await cartRepository.cart();
+        let carts = await cartRepository.cartByUserId(req.body.userId);
         let cart = carts[0];
         cart.items = [];
         cart.subTotal = 0

@@ -15,3 +15,11 @@ exports.removeOrder = async id => {
 exports.updateOrder = async (filter, update) => {
     return Order.findByIdAndUpdate(filter, update)
 }
+exports.orderByUserId = async id => {
+    console.log(id)
+    return Order.find({"userId":id})
+}
+exports.orderByOrderId = async id => {
+    console.log("id zamowienia " + id)
+    return Order.find({"_id":id})
+}

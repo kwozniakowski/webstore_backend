@@ -1,9 +1,10 @@
 const orderRepository = require('./OrderRepo')
-
+const cartController = require("../Cart/CartController")
 exports.createOrder = async (req, res) => {
     try {
         let body = req.body
         let payload = {
+            userId: body.userId,
             acceptDate: body.acceptDate,
             total: body.cart.subTotal,
             state: {state: 'NIEZATWIERDZONE'},
@@ -44,13 +45,13 @@ exports.getAllOrders = async (req, res) => {
     }
 }
 
-exports.getOrder = async (req, res) => {
+exports.getOrderById = async (req, res) => {
     try {
-        let id = req.params.id
-        let productDetails = await orderRepository.orderById(id);
+        let userId = req.body.userId
+        let orders = await orderRepository.orderByUserId(userId);
         res.status(200).json({
             status: true,
-            data: productDetails,
+            data: orders,
         })
     } catch (err) {
         res.status(500).json({
@@ -76,15 +77,25 @@ exports.deleteOrder = async (req, res) => {
 }
 
 exports.updateOrder = async (req,res) => {
+
     try {
-        let data = {
+        let jsonData = {
             id: req.body.id,
-            //TODO: dane ordera
+            state: req.body.state,
+            acceptDate: req.body.acceptDate
         }
-        let order = await orderRepository.updateOrder(data.id, data);
+        let orders = await orderRepository.orderByOrderId(jsonData.id);
+        let order = orders[0]
+        order.state = {state: jsonData.state}
+        if(order.state.state !== 'ANULOWANE')
+        {
+            order.acceptDate = jsonData.acceptDate
+        }
+
+        let data = await order.save();
         res.status(200).json({
             status: true,
-            data: order,
+            data: data,
         })
     } catch (err) {
         console.log(err)

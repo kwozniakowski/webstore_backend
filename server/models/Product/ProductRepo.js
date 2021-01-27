@@ -13,6 +13,6 @@ exports.removeProduct = async id => {
         if(err) console.log(err);
         console.log("Successful deletion")})
 };
-exports.editProduct = async (filter,update) => {
-    return Product.findByIdAndUpdate(filter,update);
+exports.productByProductId = async id => {
+    return Product.find({"_id":id});
 }

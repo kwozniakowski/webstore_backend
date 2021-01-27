@@ -167,3 +167,74 @@ exports.emptyCart = async (req, res) => {
         })
     }
 }
+
+exports.removeFromCart = async (req, res) => {
+    try {
+        let itemData = {
+            itemId: req.body.itemId,
+            quantity: req.body.quantity
+        }
+
+    let carts = await cartRepository.cartByUserId(req.body.userId);
+    const productId = itemData.itemId;
+    const quantity = itemData.quantity;
+    let cart;
+    if (carts.length && carts.length > 0) {
+        cart = carts[0]
+        const indexFound = cart.items.findIndex(item => item.productId._id.toString() === productId.toString());
+        //------this removes an item from the the cart if the quantity is set to zero,We can use this method to remove an item from the list  -------
+        if (indexFound !== -1) {
+            cart.items.splice(indexFound, 1);
+            if (cart.items.length === 0) {
+                cart.subTotal = 0;
+            } else {
+                cart.subTotal = cart.items.map(item => item.total).reduce((acc, next) => acc + next);
+            }
+        }
+    }
+    await cart.save();
+    res.status(200).json({
+        type: "success",
+        mgs: "Process Successful",
+        data: cart
+    })
+    }
+    catch (e) {
+        console.log(e)
+        res.status(400).json({
+            type: "Invalid",
+            msg: "Something Went Wrong",
+            err: e
+        })
+    }
+}
+
+exports.updateCart = async (req, res) => {
+    let itemData = {
+        itemId: req.body.itemId,
+        quantity: req.body.quantity
+    }
+    let carts = await cartRepository.cartByUserId(req.body.userId);
+    const productId = itemData.itemId;
+    const quantity = itemData.quantity;
+    let cart;
+    if (carts.length && carts.length > 0) {
+        cart = carts[0]
+        const indexFound = cart.items.findIndex(item => item.productId._id.toString() === productId.toString());
+        //------this removes an item from the the cart if the quantity is set to zero,We can use this method to remove an item from the list  -------
+        if (indexFound !== -1) {
+            cart.items.get(indexFound, 1);
+            if (cart.items.length === 0) {
+                cart.subTotal = 0;
+            } else {
+                cart.subTotal = cart.items.map(item => item.total).reduce((acc, next) => acc + next);
+            }
+        }
+    }
+    await cart.save();
+    res.status(200).json({
+        type: "success",
+        mgs: "Process Successful",
+        data: cart
+    })
+}
